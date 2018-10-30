@@ -9,54 +9,146 @@
 				margin: 0;
 				padding: 0;
 			}
-			body{
+
+			body {
 				overflow: hidden;
 			}
+
 			/* 在不使用overflow hidden的情况下 页面最下方会多出来一块,可以滚动,待解决 */
 			#box {
-				background: lightgray;
+				/* background: lightgray; */
 			}
-			button{
+
+			button {
 				position: fixed;
 				bottom: 0;
 				left: 0;
 			}
-			.clear{
+
+			ol {
+				list-style: none;
 			}
-			.write{
+
+			.icon {
+				width: 1em;
+				height: 1em;
+				vertical-align: -0.15em;
+				fill: currentColor;
+				overflow: hidden;
+			}
+
+			.write {
 				color: transparent;
+			}
+
+			.colors {
+				position: fixed;
+				top: 60px;
+				left: 28px;
+			}
+
+			.colors>li {
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+				margin: 10px 0;
+				transition: all 0.3s;
+			}
+
+			.colors>li.red {
+				background: red;
+			}
+
+			.colors>li.green {
+				background: green;
+			}
+
+			.colors>li.blue {
+				background: blue;
+			}
+
+			.colors>li.active {
+				box-shadow: 0 0 3px rgba(0, 0, 0, 0.95);
+				transform: scale(1.2);
+			}
+
+			.sizes {
+				position: fixed;
+				right: 20px;
+				top: 10px;
+			}
+
+			.sizes>li {
+				margin: 20px 0;
+			}
+
+			.sizes>.thin {
+				height: 0;
+				width: 20px;
+				border-top: 3px solid black;
+			}
+
+			.sizes>.thick {
+				height: 0;
+				width: 20px;
+				border-top: 6px solid black;
 			}
 		</style>
 	</head>
 	<body>
 		<canvas id="box" width="300" height="300"></canvas>
-		<button id="button" class="clear">橡皮擦</button>
+		<div id=actions class="actions">
+			<svg id=pen class="active icon">
+				<use xlink:href="#icon-pen"></use>
+			</svg>
+			<svg id=eraser class="icon">
+				<use xlink:href="#icon-erase"></use>
+			</svg>
+			<svg id=clear class="icon">
+				<use xlink:href="#icon-clear"></use>
+			</svg>
+			<svg id=download class="icon">
+				<use xlink:href="#icon-save"></use>
+			</svg>
+		</div>
+		<ol class="colors">
+			<li id="red" class="red active"></li>
+			<li id="green" class="green"></li>
+			<li id="blue" class="blue"></li>
+		</ol>
+		<ol class="sizes">
+			<li id="thin" class="thin"></li>
+			<li id="thick" class="thick"></li>
+		</ol>
 		<script type="text/javascript">
 			var canvas = document.getElementById("box");
 			var ctx = canvas.getContext('2d');
-			
-			var clearbutton=document.getElementById("button")
-			var clear=false
-			
+
+			var clearbutton = document.getElementById("clear")
+			var clear = false
+
 			// 窗口监听事件
-			
-			window.onresize =function(){
-				// refresh()
+
+			window.onresize = function() {
+				refresh()
 			}
-			function refresh(){
-				
-				var pageWidth=document.documentElement.clientWidth
-				var pageHeight=document.documentElement.clientHeight
-				
-				canvas.width=pageWidth
-				canvas.height=pageHeight
+
+			function refresh() {
+
+				var pageWidth = document.documentElement.clientWidth
+				var pageHeight = document.documentElement.clientHeight
+
+				canvas.width = pageWidth
+				canvas.height = pageHeight
 			}
 			refresh()
-			
-			
-			clearbutton.onclick=function(){
-				clear=!clear
+
+
+			clearbutton.onclick = function() {
+				clear = !clear
 			}
+
 			function draw(x, y, radius, color) {
 				ctx.beginPath()
 				ctx.fillStyle = color
@@ -65,85 +157,96 @@
 			}
 
 			var painting = false;
-			var lastPoint={"x":undefined,"y":undefined}
+			var lastPoint = {
+				"x": undefined,
+				"y": undefined
+			}
 			canvas.onmousedown = function(event) {
 				var x = event.clientX;
 				var y = event.clientY;
-				if(clear){
-					painting=true
-					ctx.clearRect(x-5,y-5,10,10)
-				}
-				else{
+				if (clear) {
 					painting = true
-					lastPoint={"x":x,"y":y}
+					ctx.clearRect(x - 5, y - 5, 10, 10)
+				} else {
+					painting = true
+					lastPoint = {
+						"x": x,
+						"y": y
+					}
 				}
 			}
 			canvas.onmousemove = function(event) {
 				console.log("a")
 				var x = event.clientX;
 				var y = event.clientY;
-				if(clear){
-					if(painting){
-						ctx.clearRect(x-5,y-5,10,10)
+				if (clear) {
+					if (painting) {
+						ctx.clearRect(x - 5, y - 5, 10, 10)
 					}
-				}
-				else{
-					if(painting){
-						var newPoint={"x":x,"y":y}
-						drawline(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
-						lastPoint=newPoint
+				} else {
+					if (painting) {
+						var newPoint = {
+							"x": x,
+							"y": y
+						}
+						drawline(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y)
+						lastPoint = newPoint
 					}
 				}
 			}
 			canvas.onmouseup = function() {
 				painting = false
 			}
-			
-			
-			canvas.ontouchstart = function(event){
-				var x=event.touches[0].clientX
-				var y=event.touches[0].clientY
-				if(clear){
-					painting=true
-					ctx.clearRect(x-5,y-5,10,10)
-				}
-				else{
+
+
+			canvas.ontouchstart = function(event) {
+				var x = event.touches[0].clientX
+				var y = event.touches[0].clientY
+				if (clear) {
 					painting = true
-					lastPoint={"x":x,"y":y}
+					ctx.clearRect(x - 5, y - 5, 10, 10)
+				} else {
+					painting = true
+					lastPoint = {
+						"x": x,
+						"y": y
+					}
 				}
 			}
-			canvas.ontouchmove = function(){
+			canvas.ontouchmove = function() {
 				console.log(canvas.height)
-				var x=event.touches[0].clientX
-				var y=event.touches[0].clientY
-				if(clear){
-					if(painting){
-						ctx.clearRect(x-5,y-5,10,10)
+				var x = event.touches[0].clientX
+				var y = event.touches[0].clientY
+				if (clear) {
+					if (painting) {
+						ctx.clearRect(x - 5, y - 5, 10, 10)
+					}
+				} else {
+					if (painting) {
+						var newPoint = {
+							"x": x,
+							"y": y
+						}
+						drawline(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y)
+						lastPoint = newPoint
 					}
 				}
-				else{
-					if(painting){
-						var newPoint={"x":x,"y":y}
-						drawline(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
-						lastPoint=newPoint
-					}
-				}
-				
+
 			}
-			canvas.ontouchend = function(){
+			canvas.ontouchend = function() {
 				painting = false
 			}
-			
-			
-			function drawline(x1,y1,x2,y2){
+
+
+			function drawline(x1, y1, x2, y2) {
 				ctx.beginPath()
-				ctx.moveTo(x1,y1)
-				ctx.lineWidth=5
-				ctx.lineTo(x2,y2)
+				ctx.moveTo(x1, y1)
+				ctx.lineWidth = 5
+				ctx.lineTo(x2, y2)
 				ctx.stroke()
 				ctx.closePath()
 			}
-			
 		</script>
+		<script src="//at.alicdn.com/t/font_478967_6n4o5i5mnff4unmi.js"></script>
 	</body>
 </html>
