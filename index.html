@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>canvas</title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			#box {
+				background: lightgray;
+			}
+			button{
+				position: fixed;
+				top: 0;
+				left: 0;
+			}
+			.clear{
+			}
+			.write{
+				color: transparent;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="box" width="500" height="500"></canvas>
+		<button id="button" class="clear">橡皮擦</button>
+		<script type="text/javascript">
+			var canvas = document.getElementById("box");
+			var ctx = canvas.getContext('2d');
+			
+			var clearbutton=document.getElementById("button")
+			var clear=false
+			
+			// 窗口监听事件
+			
+			window.resize =function(){
+				refresh()
+			}
+			function refresh(){
+				
+				var pageWidth=document.documentElement.clientWidth
+				var pageHeight=document.documentElement.clientHeight
+				
+				canvas.width=pageWidth
+				canvas.height=pageHeight
+			}
+			refresh()
+			
+			
+			clearbutton.onclick=function(){
+				clear=!clear
+			}
+			function draw(x, y, radius, color) {
+				ctx.beginPath()
+				ctx.fillStyle = color
+				ctx.arc(x, y, radius, 0, Math.PI * 2)
+				ctx.fill()
+			}
+
+			var painting = false;
+			var lastPoint={"x":undefined,"y":undefined}
+			canvas.onmousedown = function(event) {
+				var x = event.clientX;
+				var y = event.clientY;
+				if(clear){
+					painting=true
+					ctx.clearRect(x-5,y-5,10,10)
+				}
+				else{
+					painting = true
+					lastPoint={"x":x,"y":y}
+				}
+			}
+			canvas.onmousemove = function(event) {
+				var x = event.clientX;
+				var y = event.clientY;
+				if(clear){
+					if(painting){
+						ctx.clearRect(x-5,y-5,10,10)
+					}
+				}
+				else{
+					if(painting){
+						var newPoint={"x":x,"y":y}
+						drawline(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
+						lastPoint=newPoint
+					}
+				}
+			}
+			canvas.onmouseup = function() {
+				painting = false
+			}
+			
+			
+			canvas.ontouchstart = function(event){
+				var x=event.touches[0].clientX
+				var y=event.touches[0].clientY
+				if(clear){
+					painting=true
+					ctx.clearRect(x-5,y-5,10,10)
+				}
+				else{
+					painting = true
+					lastPoint={"x":x,"y":y}
+				}
+			}
+			canvas.ontouchmove = function(){
+				var x=event.touches[0].clientX
+				var y=event.touches[0].clientY
+				if(clear){
+					if(painting){
+						ctx.clearRect(x-5,y-5,10,10)
+					}
+				}
+				else{
+					if(painting){
+						var newPoint={"x":x,"y":y}
+						drawline(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
+						lastPoint=newPoint
+					}
+				}
+				
+			}
+			canvas.ontouchend = function(){
+				painting = false
+			}
+			
+			
+			function drawline(x1,y1,x2,y2){
+				ctx.beginPath()
+				ctx.moveTo(x1,y1)
+				ctx.lineWidth=5
+				ctx.lineTo(x2,y2)
+				ctx.stroke()
+				ctx.closePath()
+			}
+			
+		</script>
+	</body>
+</html>
