@@ -9,12 +9,16 @@
 				margin: 0;
 				padding: 0;
 			}
+			body{
+				overflow: hidden;
+			}
+			/* 在不使用overflow hidden的情况下 页面最下方会多出来一块,可以滚动,待解决 */
 			#box {
 				background: lightgray;
 			}
 			button{
 				position: fixed;
-				top: 0;
+				bottom: 0;
 				left: 0;
 			}
 			.clear{
@@ -25,7 +29,7 @@
 		</style>
 	</head>
 	<body>
-		<canvas id="box" width="500" height="500"></canvas>
+		<canvas id="box" width="300" height="300"></canvas>
 		<button id="button" class="clear">橡皮擦</button>
 		<script type="text/javascript">
 			var canvas = document.getElementById("box");
@@ -37,7 +41,7 @@
 			// 窗口监听事件
 			
 			window.onresize =function(){
-				refresh()
+				// refresh()
 			}
 			function refresh(){
 				
@@ -75,6 +79,7 @@
 				}
 			}
 			canvas.onmousemove = function(event) {
+				console.log("a")
 				var x = event.clientX;
 				var y = event.clientY;
 				if(clear){
@@ -108,6 +113,7 @@
 				}
 			}
 			canvas.ontouchmove = function(){
+				console.log(canvas.height)
 				var x=event.touches[0].clientX
 				var y=event.touches[0].clientY
 				if(clear){
