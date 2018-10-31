@@ -147,12 +147,19 @@
 			var canvas = document.getElementById("box");
 			var pen = document.getElementById("pen")
 			var eraser = document.getElementById("eraser")
-			var ctx = canvas.getContext('2d');
-
 			var clear = document.getElementById("clear")
+			var download=document.getElementById("download")
+			var ctx = canvas.getContext('2d');
+			var black=document.getElementById("black")
+			var blue=document.getElementById("blue")
+			var red=document.getElementById("red")
+			var green=document.getElementById("green")
+			var thin=document.getElementById("thin")
+			var thick=document.getElementById("thick")
+			
 			var clearbutton = false
 			
-			ctx.lineWidth = 5
+			var lineWidth=5
 
 			// 窗口监听事件
 
@@ -198,7 +205,8 @@
 			black.onclick = function() {
 				ctx.fillStyle = 'black'
 				ctx.strokeStyle = 'black'
-				red.classList.add('active')
+				black.classList.add('active')
+				red.classList.remove('active')
 				green.classList.remove('active')
 				blue.classList.remove('active')
 			}
@@ -289,7 +297,7 @@
 				var y = event.touches[0].clientY
 				if (clearbutton) {
 					painting = true
-					ctx.clearRect(x - 5, y - 5, 10, 10)
+					ctx.clearRect(x - 15, y - 15, 30, 30)
 				} else {
 					painting = true
 					lastPoint = {
@@ -304,7 +312,7 @@
 				var y = event.touches[0].clientY
 				if (clearbutton) {
 					if (painting) {
-						ctx.clearRect(x - 5, y - 5, 10, 10)
+						ctx.clearRect(x - 15, y - 15, 30, 30)
 					}
 				} else {
 					if (painting) {
@@ -325,7 +333,7 @@
 
 			function drawline(x1, y1, x2, y2) {
 				ctx.beginPath()
-				ctx.lineWidth = 5
+				ctx.lineWidth = lineWidth
 				ctx.moveTo(x1, y1)
 				ctx.lineTo(x2, y2)
 				ctx.stroke()
