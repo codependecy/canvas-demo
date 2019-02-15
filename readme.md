@@ -1,4 +1,4 @@
-# <canvas> 元素
+# <canvas>元素
 <canvas> 是一个替换元素，需要结束标签</canvas>。它只有两个标签：width 和 height，当没有设置宽高，canvas 会默认为宽300px和高150px（使用CSS设置canvas 的宽高会导致画布内容模糊）。
 <canvas> 需要通过脚本，它有一个叫getContext() 方法是用来获得 rendering context or painting. 对于2D图像而言，可以使用 CanvasRenderingContext2D。
 var canvas=document.getElementById("canvasCtx"); //为元素<canvas>得到DOM对象
