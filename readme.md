@@ -1,4 +1,4 @@
-<canvas> 元素
+Canvas元素
 
 <canvas> 是一个替换元素，需要结束标签</canvas>。它只有两个标签：width 和 height，当没有设置宽高，canvas 会默认为宽300px和高150px（使用CSS设置canvas 的宽高会导致画布内容模糊）。
 
